@@ -1,0 +1,7 @@
+﻿.order-item {
+    cursor: pointer;    
+}
+
+    .order-item.active {
+        background-color: aquamarine;
+    }

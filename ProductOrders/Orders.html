@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <link href="Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="Content/orders.css" rel="stylesheet" />
+    <script type="text/javascript" src="Scripts/jquery-3.0.0.min.js"></script>
+    <script type="text/javascript" src="Scripts/knockout-3.4.2.js"></script>
+    <script type="text/javascript" src="Scripts/utils/dataService.js"></script>
+    <script type="text/javascript" src="Scripts/models/order.js"></script>
+    <script type="text/javascript" src="Scripts/viewmodels/ordersViewModel.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            ko.applyBindings(ordersViewModel);
+            ordersViewModel.init();
+        });
+    </script>
+    <meta charset="utf-8" />
+    <title>Orders</title>
+</head>
+<body>
+    <div class="container-fluid">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Sales Order</th>
+                    <th>Customer</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody data-bind="foreach: orders">
+                <tr class="order-item" data-bind="click: onSelectOrder, css:{ 'active': orderNo() == $root.selectedOrderNo() }">
+                    <td data-bind="text: orderNo"></td>
+                    <td data-bind="text: customer"></td>
+                    <td data-bind="text: status"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
