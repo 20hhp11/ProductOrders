@@ -2,18 +2,22 @@
 
     var self = this;
 
-    self.selectedOrderNo = ko.observable(null);
+    self.selectedOrderId = ko.observable(null);
     self.orders = ko.observableArray([]);
 
     self.init = function () {
         var orders = dataService.getOrders();
         self.orders(ko.utils.arrayMap(orders, function (order) {
-            return new Order(order.orderNo, order.customer, order.status);
+            return new OrderIdentification(order.orderId, order.customerId, order.customerName, order.orderStatus);
         }));
     };
 
     self.onSelectOrder = function (order) {
-        self.selectedOrderNo(order.orderNo());
+        self.selectedOrderId(order.orderId());
+    };
+
+    self.onViewAvailableDocuments = function () {
+        window.location.href = "OrderDocuments.html";
     };
 
     return self;

@@ -1,0 +1,111 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="Content/orders.css" rel="stylesheet" />
+    <link href="Content/font-awesome.min.css" rel="stylesheet" />
+    <script type="text/javascript" src="Scripts/jquery-3.0.0.min.js"></script>
+    <script type="text/javascript" src="Scripts/knockout-3.4.2.js"></script>
+    <script type="text/javascript" src="Scripts/utils/dataService.js"></script>
+    <script type="text/javascript" src="Scripts/models/orderIdentification.js"></script>
+    <script type="text/javascript" src="Scripts/models/orderDocument.js"></script>
+    <script type="text/javascript" src="Scripts/viewmodels/orderDocumentsViewModel.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            ko.applyBindings(orderDocumentsViewModel);
+            orderDocumentsViewModel.init();
+        });
+    </script>
+    <title>Order Documents</title>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="header row">
+            <div class="col-sm-6 col-md-6 col-lg-4 vertical-top-space-3" data-bind="with: orderDetails">
+                <div class="row">
+                    <div class="col-sm-5 col-md-4 col-lg-4 col-4">Sales order</div>
+                    <div class="col-sm-7 col-md-8 col-lg-8 col-8 order-info-val text-right" data-bind="text: orderId"></div>
+                    <div clas="clearfix"></div>
+                </div>
+                <div class="row vertical-top-space-5">
+                    <div class="col-sm-5 col-md-4 col-lg-4 col-4">Customer</div>
+                    <div class="col-sm-7 col-md-8 col-lg-8 col-8 order-info-val text-right">
+                        <span data-bind="text: customerId"></span>
+                        <span data-bind="text: customerName"></span>
+                    </div>
+                    <div clas="clearfix"></div>
+                </div>
+                <div class="row vertical-top-space-5">
+                    <div class="col-sm-5 col-md-4 col-lg-4 col-4">Status</div>
+                    <div class="col-sm-7 col-md-8 col-lg-8 col-8 order-info-val text-right" data-bind="text: orderStatus"></div>
+                    <div clas="clearfix"></div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-8 text-right vertical-top-space-3">
+                <div class="row">
+                    <div class="col-sm-2 col-md-4 col-lg-8"></div>
+                    <div class="col-sm-10 col-md-8 col-lg-4 text-left">
+                        <div>Document type</div>
+                        <div>
+                            <select class="order-doc-types" data-bind="options: documentTypes, optionsCaption: 'All', value: selectedDocumentType"></select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div clas="clearfix"></div>
+        </div>
+        <div class="main-content row">
+            <div class="col-sm-12" style="height: 100%;">
+                <table class="order-doc-tbl-hdr text-center">
+                    <tr>
+                        <th class="order-col-3">
+                            Type
+                        </th>
+                        <th class="order-col-2">
+                            Number
+                        </th>
+                        <th class="order-col-3">
+                            Date
+                        </th>
+                        <th class="order-col-2">
+                            Amount
+                        </th>
+                        <th class="order-col-2">
+                            Currency
+                        </th>
+                    </tr>
+                </table>
+                <div class="order-doc-tbl-scroll">                         
+                    <table class="order-doc-tbl" data-bind="foreach: {data: filteredDocuments, afterRender: renderedHandler}">
+                        <tr class="row order-doc-item" data-bind="css: { 'active': $index() == $root.selectedDocumentIndex() }, click: $root.onSelectDocument.bind($data, $index())">
+                            <td class="order-col-3">
+                                <span>
+                                    <i class="fa" data-bind="css: { 'fa-angle-up': isExtendedInfoExpanded(), 'fa-angle-down': !isExtendedInfoExpanded() }, click: $root.toggleExtendedInfo"></i>
+                                </span>
+                                <span class="horizontal-left-space-5" data-bind="text: type">
+                                </span>
+                            </td>
+                            <td class="order-col-2 text-center" data-bind="text: number"></td>
+                            <td class="order-col-3 text-center" data-bind="text: date"></td>
+                            <td class="order-col-2 text-center" data-bind="text: amount"></td>
+                            <td class="order-col-2 text-center" data-bind="text: currency"></td>
+                        </tr>
+                        <!--ko if: isExtendedInfoExpanded-->
+                        <tr class="row order-doc-extended-info order-doc-item" data-bind="css: { 'active': $index() == $root.selectedDocumentIndex() }">
+                            <td colspan="5" class="col-sm-12 col-12" data-bind="text: extendedInformation"></td>
+                        </tr>
+                        <!--/ko-->
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="footer row">
+            <div class="col-sm-12 text-right vertical-top-space-2">
+                <button class="btn btn-info" data-bind="enable: selectedDocumentIndex() > -1, click: onPrint">Print</button>
+                <button class="btn btn-info" data-bind="enable: selectedDocumentIndex() > -1, click: onPreview">Preview</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,12 +1,13 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="Content/bootstrap.min.css" rel="stylesheet" />
     <link href="Content/orders.css" rel="stylesheet" />
     <script type="text/javascript" src="Scripts/jquery-3.0.0.min.js"></script>
     <script type="text/javascript" src="Scripts/knockout-3.4.2.js"></script>
     <script type="text/javascript" src="Scripts/utils/dataService.js"></script>
-    <script type="text/javascript" src="Scripts/models/order.js"></script>
+    <script type="text/javascript" src="Scripts/models/orderIdentification.js"></script>
     <script type="text/javascript" src="Scripts/viewmodels/ordersViewModel.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
@@ -14,27 +15,40 @@
             ordersViewModel.init();
         });
     </script>
-    <meta charset="utf-8" />
     <title>Orders</title>
 </head>
 <body>
     <div class="container-fluid">
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Sales Order</th>
-                    <th>Customer</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody data-bind="foreach: orders">
-                <tr class="order-item" data-bind="click: onSelectOrder, css:{ 'active': orderNo() == $root.selectedOrderNo() }">
-                    <td data-bind="text: orderNo"></td>
-                    <td data-bind="text: customer"></td>
-                    <td data-bind="text: status"></td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="row">
+            <div class="col-5 col-sm-5">
+                <h6 class="vertical-top-space-3">Product Orders</h6>
+            </div>
+            <div class="col-7 col-sm-7 text-right vertical-top-space-4">
+                <button class="btn btn-sm btn-info" data-bind="click: onViewAvailableDocuments">View Available Documents</button>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="vertical-top-space-3">
+            <table class="table table-bordered">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Sales Order</th>
+                        <th>Customer</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody data-bind="foreach: orders">
+                    <tr class="order-item" data-bind="click: onSelectOrder, css:{ 'active': orderId() == $root.selectedOrderId() }">
+                        <td data-bind="text: orderId"></td>
+                        <td>
+                            <span data-bind="text: customerId"></span>
+                            <span data-bind="text: customerName"></span>
+                        </td>
+                        <td data-bind="text: orderStatus"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </body>
 </html>
