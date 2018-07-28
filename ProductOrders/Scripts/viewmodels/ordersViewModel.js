@@ -2,7 +2,7 @@
 
     var self = this;
 
-    self.selectedOrderId = ko.observable(null);
+    self.selectedOrderIndex = ko.observable(-1);
     self.orders = ko.observableArray([]);
 
     self.init = function () {
@@ -12,12 +12,30 @@
         }));
     };
 
-    self.onSelectOrder = function (order) {
-        self.selectedOrderId(order.orderId());
+    self.onSelectOrder = function (index) {
+        if (self.selectedOrderIndex() === index)
+            self.selectedOrderIndex(-1);
+        else
+            self.selectedOrderIndex(index);
     };
 
     self.onViewAvailableDocuments = function () {
         window.location.href = "OrderDocuments.html";
+    };
+
+    self.renderedHandler = function () {
+        if ($('.orders-tbl-scroll').length === 0)
+            return;
+
+        var isScollbar = $('.orders-tbl-scroll')[0].scrollHeight > $('.orders-tbl-scroll').height();
+        if (isScollbar)
+            $('.orders-tbl-scroll').addClass('scroll-pad');
+        else
+            $('.orders-tbl-scroll').removeClass('scroll-pad');
+    };
+
+    window.onresize = function () {
+        self.renderedHandler();
     };
 
     return self;

@@ -19,35 +19,41 @@
 </head>
 <body>
     <div class="container-fluid">
-        <div class="row">
+        <div class="row orders-header">
             <div class="col-5 col-sm-5">
                 <h6 class="vertical-top-space-3">Product Orders</h6>
             </div>
             <div class="col-7 col-sm-7 text-right vertical-top-space-4">
-                <button class="btn btn-sm btn-info" data-bind="click: onViewAvailableDocuments">View Available Documents</button>
+                <button class="btn btn-sm btn-info" data-bind="enable: selectedOrderIndex() > -1, click: onViewAvailableDocuments">View Available Documents</button>
             </div>
             <div class="clearfix"></div>
         </div>
-        <div class="vertical-top-space-3">
-            <table class="table table-bordered">
-                <thead class="thead-light">
-                    <tr>
-                        <th>Sales Order</th>
-                        <th>Customer</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody data-bind="foreach: orders">
-                    <tr class="order-item" data-bind="click: onSelectOrder, css:{ 'active': orderId() == $root.selectedOrderId() }">
-                        <td data-bind="text: orderId"></td>
-                        <td>
+        <div class="orders-content">
+            <table class="order-doc-tbl-hdr text-center">
+                <tr>
+                    <th class="order-col-4">
+                        Sales Order
+                    </th>
+                    <th class="order-col-4">
+                        Customer
+                    </th>
+                    <th class="order-col-4">
+                        Status
+                    </th>
+                </tr>
+            </table>
+            <div class="orders-tbl-scroll">
+                <table class="order-doc-tbl vertical-top-space-3" data-bind="foreach: {data: orders, afterRender: renderedHandler}">
+                    <tr class="row order-doc-item" data-bind="click: $root.onSelectOrder.bind($data, $index()), css:{ 'active':  $index() == $root.selectedOrderIndex() }">
+                        <td class="order-col-4 text-center" data-bind="text: orderId"></td>
+                        <td class="order-col-4 text-center">
                             <span data-bind="text: customerId"></span>
                             <span data-bind="text: customerName"></span>
                         </td>
-                        <td data-bind="text: orderStatus"></td>
+                        <td class="order-col-4 text-center" data-bind="text: orderStatus"></td>
                     </tr>
-                </tbody>
-            </table>
+                </table>
+            </div>
         </div>
     </div>
 </body>

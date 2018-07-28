@@ -22,6 +22,8 @@
             return doc.type();
         })));
         self.documentTypes.sort();
+
+        initializePrintEvent();
     };
 
     self.filteredDocuments = ko.computed(function () {
@@ -47,12 +49,20 @@
     };
 
     self.onPrint = function () {
-        var selectedDocument = self.orderDocuments()[self.selectedDocumentIndex()];
-        window.open('/ViewerJS/index.html?type=pdf#/OrderOData/GetPdfDocument?orderRecordId=' + selectedDocument.orderRecordId() + '&documentType=' + selectedDocument.type());
+
+        var isIEOrEdge = /Trident/.test(navigator.userAgent) || /MSIE/.test(navigator.userAgent) || /Edge/.test(navigator.userAgent);
+        if (isIEOrEdge) {
+            $('#toPrint').attr('src', getPdfUrl());
+        }
+        else {
+            var win = window.open(getPdfUrl());
+            win.print();
+        }
     };
 
     self.onPreview = function () {
-
+        window.open(getPdfUrl());
+        //window.open('ViewerJS/index.html?type=pdf#' + self.getBaseUrl() + 'OrderOData/GetPdfDocument?orderRecordId=' + selectedDocument.orderRecordId() + '&documentType=' + selectedDocument.type());
     };
 
     self.renderedHandler = function () {
@@ -68,6 +78,21 @@
 
     window.onresize = function () {
         self.renderedHandler();
+    };
+
+    var initializePrintEvent = function () {
+        $('#toPrint').on('load', function () {
+            window.setTimeout(function () {
+                window.frames['toPrint'].contentWindow.print();
+            }, 1000);
+        });
+    };
+
+    var getPdfUrl = function () {
+        var re = new RegExp(/^.*\//);
+        var baseUrl = re.exec(window.location.href);
+        var selectedDocument = self.orderDocuments()[self.selectedDocumentIndex()];
+        return baseUrl + 'OrderOData/GetPdfDocument?orderRecordId=' + selectedDocument.orderRecordId() + '&documentType=' + selectedDocument.type();
     };
 
     return self;

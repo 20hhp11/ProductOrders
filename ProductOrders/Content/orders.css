@@ -70,6 +70,21 @@
     z-index: 1;
 }
 
+.orders-header {
+    height: 50px;
+}
+
+.orders-content {
+    height: calc(100% - 70px) !important;
+}
+
+.orders-tbl-scroll {
+    height: calc(100% - 42px) !important;
+    overflow: auto;
+    overflow: overlay;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+}
+
 .order-item {
     cursor: pointer;
 }
@@ -199,7 +214,7 @@
     }
 }
 
-[class*="col-"]{
+[class*="col-"] {
     float: left;
 }
 

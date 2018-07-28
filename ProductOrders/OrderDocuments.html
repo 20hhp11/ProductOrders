@@ -56,7 +56,7 @@
             <div clas="clearfix"></div>
         </div>
         <div class="main-content row">
-            <div class="col-sm-12" style="height: 100%;">
+            <div class="col-sm-12 h-100">
                 <table class="order-doc-tbl-hdr text-center">
                     <tr>
                         <th class="order-col-3">
@@ -76,7 +76,7 @@
                         </th>
                     </tr>
                 </table>
-                <div class="order-doc-tbl-scroll">                         
+                <div class="order-doc-tbl-scroll">
                     <table class="order-doc-tbl" data-bind="foreach: {data: filteredDocuments, afterRender: renderedHandler}">
                         <tr class="row order-doc-item" data-bind="css: { 'active': $index() == $root.selectedDocumentIndex() }, click: $root.onSelectDocument.bind($data, $index())">
                             <td class="order-col-3">
@@ -107,5 +107,6 @@
             </div>
         </div>
     </div>
+    <iframe style="display:none" id='toPrint' name="toPrint" src=''></iframe>
 </body>
 </html>
