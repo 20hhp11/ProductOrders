@@ -55,7 +55,7 @@
             var selectedDocument = self.orderDocuments()[self.selectedDocumentIndex()];
             $("#pdfDocument").remove();
             $('body').append("<embed style='position: absolute; top: 0; left: 0; z-index:-2' width='0%' height='0%' type='application/pdf' src='OrderOData/GetPdfDocument?orderRecordId=" + selectedDocument.orderRecordId() + '&documentType=' + selectedDocument.type() + "' id='pdfDocument' /> ");
-            printPDF();
+            printPDF(10);
         }
         else if (isEdge) {
             $('#toPrint').attr('src', getPdfUrl());
@@ -89,7 +89,10 @@
     var initializePrintEvent = function () {
         $('#toPrint').on('load', function () {
             window.setTimeout(function () {
-                window.frames['toPrint'].print();                
+                if (window.frames['toPrint'].print)
+                    window.frames['toPrint'].print();
+                else if (window.frames['toPrint'].contentWindow.print)
+                    window.frames['toPrint'].contentWindow.print();
             }, 1000);
         });
     };
@@ -101,10 +104,14 @@
         return baseUrl + 'OrderOData/GetPdfDocument?orderRecordId=' + selectedDocument.orderRecordId() + '&documentType=' + selectedDocument.type();
     };
 
-    function printPDF() {
-        //Wait until PDF is ready to print
+    function printPDF(limit) {
+        //Wait until PDF is ready to print        
         if (typeof document.getElementById("pdfDocument").print == 'undefined') {
-            setTimeout(function () { printPDF(); }, 1000);
+            setTimeout(function () {
+                limit--;
+                if (limit > 0)
+                    printPDF(limit);
+            }, 1000);
         } else {
             setTimeout(function () {
                 var x = document.getElementById("pdfDocument");
