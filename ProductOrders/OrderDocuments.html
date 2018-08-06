@@ -15,7 +15,7 @@
         $(document).ready(function () {
             ko.applyBindings(orderDocumentsViewModel);
             orderDocumentsViewModel.init();
-        });        
+        });
     </script>
     <title>Order Documents</title>
 </head>
@@ -80,11 +80,11 @@
                     <table class="order-doc-tbl" data-bind="foreach: {data: filteredDocuments, afterRender: renderedHandler}">
                         <tr class="row order-doc-item" data-bind="css: { 'active': $index() == $root.selectedDocumentIndex() }, click: $root.onSelectDocument.bind($data, $index())">
                             <td class="order-col-3">
-                                <span>
-                                    <i class="fa" data-bind="css: { 'fa-angle-up': isExtendedInfoExpanded(), 'fa-angle-down': !isExtendedInfoExpanded() }, click: $root.toggleExtendedInfo"></i>
-                                </span>
-                                <span class="horizontal-left-space-5" data-bind="text: type">
-                                </span>
+                                <div class="order-doc-arrow">
+                                    <i class="fa" data-bind="style: { visibility: extendedInformation()? 'visible' : 'hidden' }, css: { 'fa-angle-up': isExtendedInfoExpanded(), 'fa-angle-down': !isExtendedInfoExpanded() }, click: $root.toggleExtendedInfo"></i>
+                                </div>
+                                <div class="order-doc-type-text" data-bind="text: type">
+                                </div>
                             </td>
                             <td class="order-col-2 text-center" data-bind="text: number"></td>
                             <td class="order-col-3 text-center" data-bind="text: date"></td>
@@ -107,6 +107,6 @@
             </div>
         </div>
     </div>
-    <iframe style="display:none" id='toPrint' name="toPrint" src=''></iframe>    
+    <iframe style="display:none" id='toPrint' name="toPrint" src=''></iframe>
 </body>
 </html>

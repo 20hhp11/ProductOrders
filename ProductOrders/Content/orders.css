@@ -191,6 +191,16 @@
         background-color: aquamarine;
     }
 
+.order-doc-arrow {
+    width: 14px;
+    float: left;
+    text-align: center
+}
+
+.order-doc-extended-info, .order-doc-type-text {
+    padding-left: 20px;
+}
+
 
 @media (max-width: 576px) {
     .header {
@@ -211,6 +221,10 @@
 
     .order-doc-tbl-hdr th {
         padding: 5px 2px;
+    }
+
+    .order-doc-extended-info, .order-doc-type-text {
+        padding-left: 15px;
     }
 }
 
