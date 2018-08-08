@@ -1,5 +1,4 @@
-﻿
-using System.Web.Http;
+﻿using System.Web.Http;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using ProductOrders.Models;
