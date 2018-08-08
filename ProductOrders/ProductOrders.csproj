@@ -103,6 +103,7 @@
   <ItemGroup>
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\font-awesome.min.css" />
+    <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="PdfViewer\build\pdf.js" />
     <Content Include="PdfViewer\build\pdf.worker.js" />
     <Content Include="Content\orders.css" />
@@ -219,6 +220,11 @@
     <Content Include="PdfViewer\web\viewer.js" />
     <Content Include="PdfViewer\build\pdf.js.map" />
     <Content Include="PdfViewer\build\pdf.worker.js.map" />
+    <Content Include="fonts\fontawesome-webfont.eot" />
+    <Content Include="fonts\fontawesome-webfont.ttf" />
+    <Content Include="fonts\fontawesome-webfont.woff" />
+    <Content Include="fonts\fontawesome-webfont.woff2" />
+    <Content Include="fonts\FontAwesome.otf" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <Content Include="Scripts\jquery-3.0.0.min.js" />
     <Content Include="Scripts\knockout-3.4.2.js" />
