@@ -21,8 +21,13 @@
     function getPdf(url) {
         var dfd = $.Deferred();
         $.get(url, function (response) {
+            $('#pageLoader').hide();
             dfd.resolve(response.value);
-        });
+        }).fail(function () {
+            $('#pageLoader').hide();
+            alert('Unable to load PDF');
+            dfd.reject();
+        });;
         return dfd.promise();
     };
 
