@@ -119,6 +119,7 @@
     <Content Include="Global.asax" />
     <Content Include="OrderDocuments.html" />
     <Content Include="Orders.html" />
+    <Content Include="PdfViewer\web\jquery-3.0.0.min.js" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -147,7 +148,7 @@
     <Content Include="fonts\fontawesome-webfont.ttf" />
     <Content Include="fonts\fontawesome-webfont.eot" />
     <Content Include="Pdf\sample.pdf" />
-    <Content Include="PdfViewer\web\printHelper.js" />
+    <Content Include="PdfViewer\web\pdfHelper.js" />
     <Content Include="PdfViewer\web\debugger.js" />
     <Content Include="PdfViewer\web\images\annotation-check.svg" />
     <Content Include="PdfViewer\web\images\annotation-comment.svg" />

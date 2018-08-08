@@ -5,7 +5,7 @@
     self.orderDocuments = ko.observableArray([]);
     self.selectedDocumentIndex = ko.observable(-1);
     self.documentTypes = ko.observableArray([]);
-    self.selectedDocumentType = ko.observable(undefined);
+    self.selectedDocumentType = ko.observable(undefined);    
 
     self.init = function () {
         var order = dataService.getOrderDetails();
@@ -47,11 +47,11 @@
     };
 
     self.onPrint = function () {
-        var win = window.open('PdfViewer/web/viewer.html?print&file=/PDF/sample.pdf');        
+        window.open('PdfViewer/web/viewer.html?print=1&url=' + encodeURIComponent(getPdfUrl()));
     };
 
     self.onPreview = function () {
-        var win = window.open('PdfViewer/web/viewer.html?file=/PDF/sample.pdf');        
+        window.open('PdfViewer/web/viewer.html?url=' + encodeURIComponent(getPdfUrl()));
     };
 
     self.renderedHandler = function () {
@@ -67,13 +67,13 @@
 
     window.onresize = function () {
         self.renderedHandler();
-    }; 
+    };
 
     var getPdfUrl = function () {
         var re = new RegExp(/^.*\//);
         var baseUrl = re.exec(window.location.href);
         var selectedDocument = self.orderDocuments()[self.selectedDocumentIndex()];
-        return baseUrl + 'OrderOData/GetPdfDocument?orderRecordId=' + selectedDocument.orderRecordId() + '&documentType=' + selectedDocument.type();
+        return baseUrl + 'OrderOData/GetPdfDocumentInBase64?orderRecordId=' + selectedDocument.orderRecordId() + '&documentType=' + selectedDocument.type();
     };
 
     return self;
