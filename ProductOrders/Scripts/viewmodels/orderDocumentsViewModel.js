@@ -101,7 +101,8 @@
 
     var getPdfUrl = function () {
         var re = new RegExp(/^.*\//);
-        var baseUrl = re.exec(window.location.href);
+        var baseUrl = re.exec(window.location.href);    //Will be different if hosted in windows universal app. Need to specify the baseurl of the OData service in that case.
+
         var selectedDocument = self.orderDocuments()[self.selectedDocumentIndex()];
         return baseUrl + 'OrderOData/GetPdfDocumentInBase64?orderRecordId=' + selectedDocument.orderRecordId() + '&documentType=' + selectedDocument.type();
     };
