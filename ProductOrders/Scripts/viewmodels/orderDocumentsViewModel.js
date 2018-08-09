@@ -5,7 +5,7 @@
     self.orderDocuments = ko.observableArray([]);
     self.selectedDocumentIndex = ko.observable(-1);
     self.documentTypes = ko.observableArray([]);
-    self.selectedDocumentType = ko.observable(undefined);    
+    self.selectedDocumentType = ko.observable(undefined);
 
     self.init = function () {
         var order = dataService.getOrderDetails();
@@ -47,11 +47,19 @@
     };
 
     self.onPrint = function () {
-        window.open('PdfViewer/web/viewer.html?print=1&url=' + encodeURIComponent(getPdfUrl()));
+        var ie10 = (navigator.userAgent.match(/MSIE 10/i));
+        if (ie10)
+            handlePdfInIE10();
+        else
+            window.open('PdfViewer/web/viewer.html?print=1&url=' + encodeURIComponent(getPdfUrl()));
     };
 
     self.onPreview = function () {
-        window.open('PdfViewer/web/viewer.html?url=' + encodeURIComponent(getPdfUrl()));
+        var ie10 = (navigator.userAgent.match(/MSIE 10/i));
+        if (ie10)
+            handlePdfInIE10();
+        else
+            window.open('PdfViewer/web/viewer.html?url=' + encodeURIComponent(getPdfUrl()));
     };
 
     self.renderedHandler = function () {
@@ -67,6 +75,28 @@
 
     window.onresize = function () {
         self.renderedHandler();
+    };
+
+    function openOrSavePdf(data, fileName) {
+        if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+            var byteCharacters = atob(data);
+            var byteNumbers = new Array(byteCharacters.length);
+            for (var i = 0; i < byteCharacters.length; i++) {
+                byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            var byteArray = new Uint8Array(byteNumbers);
+            var blob = new Blob([byteArray], { type: 'application/pdf' });
+            window.navigator.msSaveOrOpenBlob(blob, fileName);
+        }
+    };
+
+    function handlePdfInIE10() {
+        var url = getPdfUrl();
+        $.get(url, function (response) {
+            openOrSavePdf(response.value, 'document.pdf');
+        }).fail(function () {
+            alert('Unable to load PDF');
+        });;
     };
 
     var getPdfUrl = function () {
