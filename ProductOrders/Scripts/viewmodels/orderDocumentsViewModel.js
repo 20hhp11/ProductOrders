@@ -47,19 +47,11 @@
     };
 
     self.onPrint = function () {
-        var ie10 = (navigator.userAgent.match(/MSIE 10/i));
-        if (ie10)
-            handlePdfInIE10();
-        else
-            window.open('PdfViewer/web/viewer.html?print=1&url=' + encodeURIComponent(getPdfUrl()));
+        handlePdf(true);
     };
 
     self.onPreview = function () {
-        var ie10 = (navigator.userAgent.match(/MSIE 10/i));
-        if (ie10)
-            handlePdfInIE10();
-        else
-            window.open('PdfViewer/web/viewer.html?url=' + encodeURIComponent(getPdfUrl()));
+        handlePdf(false);
     };
 
     self.renderedHandler = function () {
@@ -77,6 +69,26 @@
         self.renderedHandler();
     };
 
+    function handlePdf(isPrint) {
+        var ie10 = (navigator.userAgent.match(/MSIE 10/i));
+        if (ie10) {
+            getPdf().done(function (result) {
+                openOrSavePdf(result, 'document.pdf');
+            });
+        }
+        else {
+            getPdf(getPdfUrl()).done(function (pdfBase64) {
+                sessionStorage.setItem('pdfBase64', pdfBase64);
+
+                var win;
+                if (isPrint)
+                    win = window.open('PdfViewer/web/viewer.html?print=1');
+                else
+                    win = window.open('PdfViewer/web/viewer.html');                
+            });
+        }
+    }
+
     function openOrSavePdf(data, fileName) {
         if (window.navigator && window.navigator.msSaveOrOpenBlob) {
             var byteCharacters = atob(data);
@@ -90,13 +102,15 @@
         }
     };
 
-    function handlePdfInIE10() {
-        var url = getPdfUrl();
+    function getPdf(url) {
+        var dfd = $.Deferred();
         $.get(url, function (response) {
-            openOrSavePdf(response.value, 'document.pdf');
+            dfd.resolve(response.value);
         }).fail(function () {
             alert('Unable to load PDF');
+            dfd.reject();
         });;
+        return dfd.promise();
     };
 
     var getPdfUrl = function () {

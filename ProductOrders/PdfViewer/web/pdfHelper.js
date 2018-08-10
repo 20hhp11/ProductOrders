@@ -18,34 +18,28 @@
         return decodeURIComponent(window.location.search.replace(new RegExp("^(?:.*[&\\?]" + encodeURIComponent(key).replace(/[\.\+\*]/g, "\\$&") + "(?:\\=([^&]*))?)?.*$", "i"), "$1"));
     };
 
-    function getPdf(url) {
-        var dfd = $.Deferred();
-        $.get(url, function (response) {
-            $('#pageLoader').hide();
-            dfd.resolve(response.value);
-        }).fail(function () {
-            $('#pageLoader').hide();
-            alert('Unable to load PDF');
-            dfd.reject();
-        });;
-        return dfd.promise();
-    };
-
     function init() {
         var isPrint = getQueryStringValue('print');
-        var url = getQueryStringValue('url');
 
-        getPdf(url).done(function (pdfBase64) {
-            var pdfAsDataUri = "data:application/pdf;base64," + pdfBase64;
-            var pdfAsArray = convertDataURIToBinary(pdfAsDataUri);
+        var pdfBase64 = sessionStorage.getItem('pdfBase64');
+        if (!pdfBase64)
+            alert("Unable to load PDF");
+
+        sessionStorage.removeItem('pdfBase64');        
+
+        var pdfAsDataUri = "data:application/pdf;base64," + pdfBase64;
+        var pdfAsArray = convertDataURIToBinary(pdfAsDataUri);
+
+        window.setTimeout(function () {
             PDFViewerApplication.open(pdfAsArray);
+            document.getElementById('pageLoader').style.display = "none";
+        }, 1000);
 
-            if (isPrint) {
-                document.addEventListener('pagesloaded', function (e) {
-                    window.print();
-                }, true);
-            }
-        });
+        if (isPrint) {
+            document.addEventListener('pagesloaded', function (e) {
+                window.print();
+            }, true);
+        }
     };
 
     init();

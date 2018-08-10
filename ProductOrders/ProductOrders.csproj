@@ -113,7 +113,6 @@
     <Content Include="Global.asax" />
     <Content Include="OrderDocuments.html" />
     <Content Include="Orders.html" />
-    <Content Include="PdfViewer\web\jquery-3.0.0.min.js" />
     <Content Include="Pdf\sample.pdf" />
     <Content Include="PdfViewer\web\pdfHelper.js" />
     <Content Include="PdfViewer\web\debugger.js" />
