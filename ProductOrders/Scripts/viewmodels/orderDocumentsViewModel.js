@@ -72,7 +72,7 @@
     function handlePdf(isPrint) {
         var ie10 = (navigator.userAgent.match(/MSIE 10/i));
         if (ie10) {
-            getPdf().done(function (result) {
+            getPdf(getPdfUrl()).done(function (result) {
                 openOrSavePdf(result, 'document.pdf');
             });
         }
