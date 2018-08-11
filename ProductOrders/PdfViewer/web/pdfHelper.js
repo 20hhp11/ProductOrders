@@ -22,10 +22,11 @@
         var isPrint = getQueryStringValue('print');
 
         var pdfBase64 = sessionStorage.getItem('pdfBase64');
-        if (!pdfBase64)
+        if (!pdfBase64) {
+            document.getElementById('pageLoader').style.display = "none";
             alert("Unable to load PDF");
-
-        sessionStorage.removeItem('pdfBase64');        
+            return;
+        }            
 
         var pdfAsDataUri = "data:application/pdf;base64," + pdfBase64;
         var pdfAsArray = convertDataURIToBinary(pdfAsDataUri);
@@ -33,13 +34,13 @@
         window.setTimeout(function () {
             PDFViewerApplication.open(pdfAsArray);
             document.getElementById('pageLoader').style.display = "none";
-        }, 1000);
 
-        if (isPrint) {
             document.addEventListener('pagesloaded', function (e) {
-                window.print();
+                sessionStorage.removeItem('pdfBase64');
+                if (isPrint)
+                    window.print();
             }, true);
-        }
+        }, 1000);
     };
 
     init();
