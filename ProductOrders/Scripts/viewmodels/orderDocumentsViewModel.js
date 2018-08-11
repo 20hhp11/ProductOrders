@@ -78,16 +78,18 @@
         }
         else {
             getPdf(getPdfUrl()).done(function (pdfBase64) {
-                sessionStorage.setItem('pdfBase64', pdfBase64);
-
-                var win;
+                var pdfWin;
                 if (isPrint)
-                    win = window.open('PdfViewer/web/viewer.html?print=1');
+                    pdfWin = window.open('PdfViewer/web/viewer.html?print=1');
                 else
-                    win = window.open('PdfViewer/web/viewer.html');                
+                    pdfWin = window.open('PdfViewer/web/viewer.html');
+
+                window.setTimeout(function () {
+                    pdfWin.postMessage(pdfBase64, '*');
+                }, 1000);
             });
         }
-    }
+    };
 
     function openOrSavePdf(data, fileName) {
         if (window.navigator && window.navigator.msSaveOrOpenBlob) {

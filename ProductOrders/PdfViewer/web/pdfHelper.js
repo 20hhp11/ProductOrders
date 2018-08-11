@@ -1,6 +1,8 @@
 ﻿(function () {
     var BASE64_MARKER = ';base64,';
 
+    window.addEventListener("message", handlePdf, false);    
+
     function convertDataURIToBinary(dataURI) {
         var base64Index = dataURI.indexOf(BASE64_MARKER) + BASE64_MARKER.length;
         var base64 = dataURI.substring(base64Index);
@@ -18,15 +20,15 @@
         return decodeURIComponent(window.location.search.replace(new RegExp("^(?:.*[&\\?]" + encodeURIComponent(key).replace(/[\.\+\*]/g, "\\$&") + "(?:\\=([^&]*))?)?.*$", "i"), "$1"));
     };
 
-    function init() {
+    function handlePdf(event) {
         var isPrint = getQueryStringValue('print');
 
-        var pdfBase64 = sessionStorage.getItem('pdfBase64');
+        var pdfBase64 = event.data;
         if (!pdfBase64) {
             document.getElementById('pageLoader').style.display = "none";
             alert("Unable to load PDF");
             return;
-        }            
+        }
 
         var pdfAsDataUri = "data:application/pdf;base64," + pdfBase64;
         var pdfAsArray = convertDataURIToBinary(pdfAsDataUri);
@@ -36,12 +38,9 @@
             document.getElementById('pageLoader').style.display = "none";
 
             document.addEventListener('pagesloaded', function (e) {
-                sessionStorage.removeItem('pdfBase64');
                 if (isPrint)
                     window.print();
             }, true);
         }, 1000);
-    };
-
-    init();
+    };      
 })();
