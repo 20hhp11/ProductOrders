@@ -10,7 +10,7 @@
     <script type="text/javascript" src="Scripts/utils/dataService.js"></script>
     <script type="text/javascript" src="Scripts/models/orderIdentification.js"></script>
     <script type="text/javascript" src="Scripts/models/orderDocument.js"></script>
-    <script type="text/javascript" src="Scripts/viewmodels/orderDocumentsViewModel.js"></script>
+    <script type="text/javascript" src="Scripts/viewmodels/orderDocumentsViewModel.js"></script>    
     <script type="text/javascript">
         $(document).ready(function () {
             ko.applyBindings(orderDocumentsViewModel);
@@ -21,6 +21,7 @@
 </head>
 <body>
     <div class="container-fluid">
+        <!--ko ifnot: isPdfViewerVisible-->
         <div class="header row">
             <div class="col-sm-6 col-md-6 col-lg-4 vertical-top-space-3" data-bind="with: orderDetails">
                 <div class="row">
@@ -106,6 +107,16 @@
                 <button class="btn btn-info" data-bind="enable: selectedDocumentIndex() > -1, click: onPreview">Preview</button>
             </div>
         </div>
+        <!--/ko-->
+        <!--ko if: isPdfViewerVisible-->
+        <div class="pdf-main-content row" id="pdfViewer">            
+        </div>
+        <div class="footer row">
+            <div class="col-sm-12 text-right vertical-top-space-2">
+                <button class="btn btn-info" data-bind="enable: selectedDocumentIndex() > -1, click: onBack">Back</button>
+            </div>
+        </div>
+        <!--/ko-->
     </div>
 </body>
 </html>

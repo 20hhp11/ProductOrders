@@ -6,6 +6,7 @@
     self.selectedDocumentIndex = ko.observable(-1);
     self.documentTypes = ko.observableArray([]);
     self.selectedDocumentType = ko.observable(undefined);
+    self.isPdfViewerVisible = ko.observable(false);
 
     self.init = function () {
         var order = dataService.getOrderDetails();
@@ -47,11 +48,17 @@
     };
 
     self.onPrint = function () {
+        self.isPdfViewerVisible(true);
         handlePdf(true);
     };
 
     self.onPreview = function () {
+        self.isPdfViewerVisible(true);
         handlePdf(false);
+    };
+
+    self.onBack = function () {
+        self.isPdfViewerVisible(false);
     };
 
     self.renderedHandler = function () {
@@ -78,15 +85,10 @@
         }
         else {
             getPdf(getPdfUrl()).done(function (pdfBase64) {
-                var pdfWin;
-                if (isPrint)
-                    pdfWin = window.open('PdfViewer/web/viewer.html?print=1');
-                else
-                    pdfWin = window.open('PdfViewer/web/viewer.html');
+                localStorage.setItem("pdfBase64", pdfBase64);
+                localStorage.setItem("isPrint", isPrint);
 
-                window.setTimeout(function () {
-                    pdfWin.postMessage(pdfBase64, '*');
-                }, 1000);
+                $('#pdfViewer').html('<embed width="100%" height="100%" src="PdfViewer/web/viewer.html" />');           
             });
         }
     };
