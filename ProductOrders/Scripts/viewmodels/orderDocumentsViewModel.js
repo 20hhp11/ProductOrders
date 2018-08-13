@@ -47,13 +47,11 @@
             self.selectedDocumentIndex(index);
     };
 
-    self.onPrint = function () {
-        self.isPdfViewerVisible(true);
+    self.onPrint = function () {        
         handlePdf(true);
     };
 
-    self.onPreview = function () {
-        self.isPdfViewerVisible(true);
+    self.onPreview = function () {        
         handlePdf(false);
     };
 
@@ -84,6 +82,7 @@
             });
         }
         else {
+            self.isPdfViewerVisible(true);
             getPdf(getPdfUrl()).done(function (pdfBase64) {
                 localStorage.setItem("pdfBase64", pdfBase64);
                 localStorage.setItem("isPrint", isPrint);
