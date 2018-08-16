@@ -7,6 +7,7 @@
     self.documentTypes = ko.observableArray([]);
     self.selectedDocumentType = ko.observable(undefined);
     self.isPdfViewerVisible = ko.observable(false);
+    var defaultFileName = "document";
 
     self.init = function () {
         var order = dataService.getOrderDetails();
@@ -47,11 +48,11 @@
             self.selectedDocumentIndex(index);
     };
 
-    self.onPrint = function () {        
+    self.onPrint = function () {
         handlePdf(true);
     };
 
-    self.onPreview = function () {        
+    self.onPreview = function () {
         handlePdf(false);
     };
 
@@ -75,34 +76,51 @@
     };
 
     function handlePdf(isPrint) {
-        var ie10 = (navigator.userAgent.match(/MSIE 10/i));
-        if (ie10) {
-            getPdf(getPdfUrl()).done(function (result) {
-                openOrSavePdf(result, 'document.pdf');
-            });
+
+        //Check support for x-ms-webview(for UWP)
+        if (window.MSHTMLWebViewElement) {
+            if (isPrint) {
+                getPdf(getPdfUrl()).done(function (result) {
+                    var byteArray = getByteArray(result);
+                    savePdfFile(byteArray);
+                });
+            }
+            else {
+                self.isPdfViewerVisible(true);
+                getPdf(getPdfUrl()).done(function (pdfBase64) {
+                    webview.addEventListener('MSWebViewNavigationCompleted', function () {
+                        var operation = webview.invokeScriptAsync("handlePdf", pdfBase64, isPrint);
+                        operation.start();
+                    });
+                    webview.navigate(new Windows.Foundation.Uri("ms-appx-web:///PdfViewer/web/viewer.html"));
+                });
+            }
         }
         else {
-            self.isPdfViewerVisible(true);
-            getPdf(getPdfUrl()).done(function (pdfBase64) {
-                localStorage.setItem("pdfBase64", pdfBase64);
-                localStorage.setItem("isPrint", isPrint);
+            var ie10 = (navigator.userAgent.match(/MSIE 10/i));
+            if (ie10) {
+                getPdf(getPdfUrl()).done(function (result) {
+                    openOrSavePdf(result, defaultFileName + '.pdf');
+                });
+            }
+            else {
+                self.isPdfViewerVisible(true);
+                getPdf(getPdfUrl()).done(function (pdfBase64) {
+                    localStorage.setItem("pdfBase64", pdfBase64);
+                    localStorage.setItem("isPrint", isPrint);
 
-                $('#pdfViewer').html('<embed width="100%" height="100%" src="PdfViewer/web/viewer.html" />');           
-            });
+                    $('#pdfViewer').html('<embed width="100%" height="100%" src="PdfViewer/web/viewer.html" />');
+                });
+            }
         }
     };
 
     function openOrSavePdf(data, fileName) {
-        if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-            var byteCharacters = atob(data);
-            var byteNumbers = new Array(byteCharacters.length);
-            for (var i = 0; i < byteCharacters.length; i++) {
-                byteNumbers[i] = byteCharacters.charCodeAt(i);
-            }
-            var byteArray = new Uint8Array(byteNumbers);
-            var blob = new Blob([byteArray], { type: 'application/pdf' });
+        var byteArray = getByteArray(data);
+        var blob = new Blob([byteArray], { type: 'application/pdf' });
+
+        if (window.navigator && window.navigator.msSaveOrOpenBlob)
             window.navigator.msSaveOrOpenBlob(blob, fileName);
-        }
     };
 
     function getPdf(url) {
@@ -124,5 +142,38 @@
         return baseUrl + 'OrderOData/GetPdfDocumentInBase64?orderRecordId=' + selectedDocument.orderRecordId() + '&documentType=' + selectedDocument.type();
     };
 
+    function getByteArray(data) {
+        var byteCharacters = atob(data);
+        var byteNumbers = new Array(byteCharacters.length);
+        for (var i = 0; i < byteCharacters.length; i++) {
+            byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        var byteArray = new Uint8Array(byteNumbers);
+        return byteArray;
+    };
+
+    function savePdfFile(byteArray) {
+        var savePicker = new Windows.Storage.Pickers.FileSavePicker();
+        savePicker.suggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.documentsLibrary;
+        savePicker.fileTypeChoices.insert("pdf", [".pdf"]);
+        savePicker.suggestedFileName = defaultFileName;
+        savePicker.pickSaveFileAsync().then(function (file) {
+            if (file) {
+                Windows.Storage.CachedFileManager.deferUpdates(file);
+                Windows.Storage.FileIO.writeBytesAsync(file, byteArray).done(function () {
+                    Windows.Storage.CachedFileManager.completeUpdatesAsync(file).done(function (updateStatus) {
+                        //if (updateStatus === Windows.Storage.Provider.FileUpdateStatus.complete) 
+                    });
+                });
+            }
+        });
+    };
+
     return self;
 }(dataService));
+
+
+
+
+
+ 
