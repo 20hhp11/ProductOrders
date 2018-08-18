@@ -32,6 +32,7 @@
             document.getElementById('pageLoader').style.display = "none";
 
             document.addEventListener('pagesloaded', function (e) {
+                document.getElementById('viewerContainer').scrollTop = 0;
                 if (isPrint == 'true')
                     window.print();
 
